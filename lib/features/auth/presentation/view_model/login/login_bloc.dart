@@ -27,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _loginUseCase = loginUseCase,
         super(LoginState.initial()) {
     on<NavigateRegisterScreenEvent>(
-          (event, emit) {
+      (event, emit) {
         Navigator.push(
           event.context,
           MaterialPageRoute(
@@ -45,7 +45,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
 
     on<NavigateHomeScreenEvent>(
-          (event, emit) {
+      (event, emit) {
         Navigator.pushReplacement(
           event.context,
           MaterialPageRoute(
@@ -59,37 +59,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
 
     on<LoginStudentEvent>(
-          (event, emit) async {
+      (event, emit) async {
         emit(state.copyWith(isLoading: true));
 
         // Commenting out dynamic login logic
-        // final result = await _loginUseCase(
-        //   LoginParams(
-        //     username: event.username,
-        //     password: event.password,
-        //   ),
-        // );
+        final result = await _loginUseCase(
+          LoginParams(
+            username: event.username,
+            password: event.password,
+          ),
+        );
 
         // Static credentials check
-        if (event.username == 'kiran' && event.password == 'kiran123') {
-          emit(state.copyWith(isLoading: false, isSuccess: true));
-          add(
-            NavigateHomeScreenEvent(
-              context: event.context,
-              destination: HomeView(),
-            ),
-          );
-        } else {
-          emit(state.copyWith(isLoading: false, isSuccess: false));
-          showMySnackBar(
-            context: event.context,
-            message: "Invalid Credentials",
-            color: Colors.red,
-          );
-        }
+        // if (event.username == 'kiran' && event.password == 'kiran123') {
+        //   emit(state.copyWith(isLoading: false, isSuccess: true));
+        //   add(
+        //     NavigateHomeScreenEvent(
+        //       context: event.context,
+        //       destination: HomeView(),
+        //     ),
+        //   );
+        // } else {
+        //   emit(state.copyWith(isLoading: false, isSuccess: false));
+        //   showMySnackBar(
+        //     context: event.context,
+        //     message: "Invalid Credentials",
+        //     color: Colors.red,
+        //   );
+        // }
 
         // If dynamic login logic is re-enabled in the future, uncomment the block below:
-        /*
+
         result.fold(
           (failure) {
             emit(state.copyWith(isLoading: false, isSuccess: false));
@@ -101,16 +101,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           },
           (token) {
             emit(state.copyWith(isLoading: false, isSuccess: true));
+            showMySnackBar(
+                context: event.context,
+                message: "Login Suceessful",
+                color: Colors.lightGreen);
             add(
               NavigateHomeScreenEvent(
                 context: event.context,
                 destination: HomeView(),
               ),
             );
-            //_homeCubit.setToken(token);
+            // _homeCubit.setToken(token);
           },
         );
-        */
       },
     );
   }

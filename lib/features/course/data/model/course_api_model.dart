@@ -17,16 +17,16 @@ class CourseApiModel extends Equatable {
       : courseId = '',
         courseName = '';
 
-  factory CourseApiModel.fromJson(Map<String, dynamic> json) {
+  factory CourseApiModel.fromJson(Map<String,dynamic> json){
     return CourseApiModel(
       courseId: json['_id'],
       courseName: json['courseName'],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'courseName': courseName,
+  Map<String, dynamic> toJson(){
+    return{
+      'courseName':courseName,
     };
   }
 
@@ -44,9 +44,9 @@ class CourseApiModel extends Equatable {
     );
   }
 
-  static List<CourseEntity> toEntityList(List<CourseApiModel> models) =>
-      models.map((model) => model.toEntity()).toList();
+  static List<CourseEntity> toEntityList(List<CourseApiModel> models)=>
+      models.map((model)=>model.toEntity()).toList();
 
   @override
-  List<Object?> get props => [courseId, courseName];
+  List<Object?> get props => [courseId,courseName];
 }

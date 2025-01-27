@@ -4,19 +4,19 @@ import 'package:softwarica_student_management_bloc/features/course/data/model/co
 part 'get_all_course_dto.g.dart';
 
 @JsonSerializable()
-class GetAllCourseDto {
+class GetAllCourseDTO {
   final bool success;
   final int count;
   final List<CourseApiModel> data;
 
-  GetAllCourseDto({
+  GetAllCourseDTO({
     required this.success,
     required this.count,
     required this.data,
   });
 
-  Map<String, dynamic> toJson() => _$GetAllCourseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$GetAllCourseDTOToJson(this);
 
-  factory GetAllCourseDto.fromJson(Map<String, dynamic> json) =>
-      _$GetAllCourseDtoFromJson(json);
+  factory GetAllCourseDTO.fromJson(Map<String, dynamic> json) =>
+      _$GetAllCourseDTOFromJson(json);
 }

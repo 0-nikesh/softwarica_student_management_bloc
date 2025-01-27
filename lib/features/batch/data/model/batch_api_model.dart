@@ -17,16 +17,16 @@ class BatchApiModel extends Equatable {
       : batchId = '',
         batchName = '';
 
-  factory BatchApiModel.fromJson(Map<String,dynamic> json){
+  factory BatchApiModel.fromJson(Map<String, dynamic> json) {
     return BatchApiModel(
       batchId: json['_id'],
       batchName: json['batchName'],
     );
   }
 
-  Map<String, dynamic> toJson(){
-    return{
-      'batchName':batchName,
+  Map<String, dynamic> toJson() {
+    return {
+      'batchName': batchName,
     };
   }
 
@@ -44,9 +44,9 @@ class BatchApiModel extends Equatable {
     );
   }
 
-  static List<BatchEntity> toEntityList(List<BatchApiModel> models)=>
-      models.map((model)=>model.toEntity()).toList();
+  static List<BatchEntity> toEntityList(List<BatchApiModel> models) =>
+      models.map((model) => model.toEntity()).toList();
 
   @override
-  List<Object?> get props => [batchId,batchName];
+  List<Object?> get props => [batchId, batchName];
 }

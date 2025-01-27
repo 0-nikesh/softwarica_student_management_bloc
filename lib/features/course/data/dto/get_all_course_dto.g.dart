@@ -6,8 +6,8 @@ part of 'get_all_course_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GetAllCourseDto _$GetAllCourseDtoFromJson(Map<String, dynamic> json) =>
-    GetAllCourseDto(
+GetAllCourseDTO _$GetAllCourseDTOFromJson(Map<String, dynamic> json) =>
+    GetAllCourseDTO(
       success: json['success'] as bool,
       count: (json['count'] as num).toInt(),
       data: (json['data'] as List<dynamic>)
@@ -15,7 +15,7 @@ GetAllCourseDto _$GetAllCourseDtoFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$GetAllCourseDtoToJson(GetAllCourseDto instance) =>
+Map<String, dynamic> _$GetAllCourseDTOToJson(GetAllCourseDTO instance) =>
     <String, dynamic>{
       'success': instance.success,
       'count': instance.count,

@@ -16,8 +16,6 @@ class BatchRemoteDataSource implements IBatchDataSource {
   Future<void> createBatch(BatchEntity batch) async {
     // TODO: implement createBatch
     try {
-      print("in remote");
-
       var batchApiModel = BatchApiModel.fromEntity(batch);
       var response = await _dio.post(ApiEndpoints.createBatch,
           data: batchApiModel.toJson());
@@ -34,9 +32,19 @@ class BatchRemoteDataSource implements IBatchDataSource {
   }
 
   @override
-  Future<void> deleteBatch(String id) {
-    // TODO: implement deleteBatch
-    throw UnimplementedError();
+  Future<void> deleteBatch(String id) async {
+    try {
+      var response = await _dio.delete(ApiEndpoints.deleteBatch + id);
+      if (response.statusCode != 204) {
+        // Assuming 204 No Content for a successful delete
+        throw Exception(
+            'Failed to delete the batch: ${response.statusMessage}');
+      }
+    } on DioException catch (e) {
+      throw Exception(e);
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override
@@ -44,8 +52,8 @@ class BatchRemoteDataSource implements IBatchDataSource {
     try {
       var response = await _dio.get(ApiEndpoints.getAllBatch);
       if (response.statusCode == 200) {
-        GetAllBatchDTO batchAddDTO = GetAllBatchDTO.fromJson(response.data);
-        return BatchApiModel.toEntityList(batchAddDTO.data);
+        GetAllBatchDTO batchDTO = GetAllBatchDTO.fromJson(response.data);
+        return BatchApiModel.toEntityList(batchDTO.data);
       } else {
         throw Exception(response.statusMessage);
       }

@@ -4,6 +4,7 @@ import 'package:softwarica_student_management_bloc/core/network/api_service.dart
 import 'package:softwarica_student_management_bloc/core/network/hive_service.dart';
 import 'package:softwarica_student_management_bloc/features/auth/data/data_source/local_data_source/auth_local_datasource.dart';
 import 'package:softwarica_student_management_bloc/features/auth/data/repository/auth_local_repository/auth_local_repository.dart';
+import 'package:softwarica_student_management_bloc/features/auth/data/repository/auth_remote_repository/auth_remote_repository.dart';
 import 'package:softwarica_student_management_bloc/features/auth/domain/use_case/login_usecase.dart';
 import 'package:softwarica_student_management_bloc/features/auth/domain/use_case/register_user_usecase.dart';
 import 'package:softwarica_student_management_bloc/features/auth/presentation/view_model/login/login_bloc.dart';
@@ -26,6 +27,8 @@ import 'package:softwarica_student_management_bloc/features/course/domain/use_ca
 import 'package:softwarica_student_management_bloc/features/course/presentation/view_model/course_bloc.dart';
 import 'package:softwarica_student_management_bloc/features/home/presentation/view_model/home_cubit.dart';
 import 'package:softwarica_student_management_bloc/features/splash/presentation/view_model/splash_cubit.dart';
+
+import '../../features/auth/data/data_source/remote_data_source/auth_remote_datasource.dart';
 
 final getIt = GetIt.instance;
 
@@ -64,10 +67,15 @@ _initRegisterDependencies() {
     () => AuthLocalRepository(getIt<AuthLocalDataSource>()),
   );
 
+  getIt.registerLazySingleton<AuthRemoteDatasource>(
+    () => AuthRemoteDatasource(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<AuthRemoteRepository>(
+      () => AuthRemoteRepository(getIt<AuthRemoteDatasource>()));
   // register use usecase
   getIt.registerLazySingleton<RegisterUseCase>(
     () => RegisterUseCase(
-      getIt<AuthLocalRepository>(),
+      getIt<AuthRemoteRepository>(),
     ),
   );
 
@@ -163,7 +171,7 @@ _initBatchDependencies() async {
   );
 
   getIt.registerLazySingleton<DeleteBatchUsecase>(
-    () => DeleteBatchUsecase(batchRepository: getIt<BatchLocalRepository>()),
+    () => DeleteBatchUsecase(batchRepository: getIt<BatchRemoteRepository>()),
   );
 
   // Bloc
@@ -185,7 +193,7 @@ _initHomeDependencies() async {
 _initLoginDependencies() async {
   getIt.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
-      getIt<AuthLocalRepository>(),
+      getIt<AuthRemoteRepository>(),
     ),
   );
 
