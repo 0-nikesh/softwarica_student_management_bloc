@@ -67,8 +67,33 @@ class AuthRemoteDatasource implements IAuthDataSource {
   }
 
   @override
-  Future<String> uploadProfilePicture(File file) {
-    // TODO: implement uploadProfilePicture
-    throw UnimplementedError();
+  Future<String> uploadProfilePicture(File file) async {
+    try {
+      String fileName = file.path.split('/').last;
+      FormData formData = FormData.fromMap(
+        {
+          'profilePicture': await MultipartFile.fromFile(
+            file.path,
+            filename: fileName,
+          ),
+        },
+      );
+
+      Response response = await _dio.post(
+        ApiEndpoints.uploadImage,
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        //extract the image name from the response
+        return response.data['data'];
+      } else {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception(e);
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

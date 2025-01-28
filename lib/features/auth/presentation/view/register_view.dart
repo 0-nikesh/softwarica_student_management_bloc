@@ -47,6 +47,9 @@ class _RegisterViewState extends State<RegisterView> {
         setState(() {
           _img = File(image.path);
           //send image to server
+          context.read<RegisterBloc>().add(
+                LoadImage(file: _img!),
+              );
         });
       } else {
         return;
@@ -265,6 +268,9 @@ class _RegisterViewState extends State<RegisterView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_key.currentState!.validate()) {
+                          final registerState =
+                              context.read<RegisterBloc>().state;
+                          final imageName = registerState.imageName;
                           context.read<RegisterBloc>().add(
                                 RegisterStudent(
                                   context: context,
@@ -275,6 +281,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   courses: _lstCourseSelected,
                                   username: _usernameController.text,
                                   password: _passwordController.text,
+                                  image: imageName,
                                 ),
                               );
                         }
