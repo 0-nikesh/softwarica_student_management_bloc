@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:softwarica_student_management_bloc/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:softwarica_student_management_bloc/features/batch/domain/entity/batch_entity.dart';
 import 'package:softwarica_student_management_bloc/features/batch/presentation/view_model/batch_bloc.dart';
@@ -27,6 +31,30 @@ class _RegisterViewState extends State<RegisterView> {
 
   BatchEntity? _dropDownValue;
   final List<CourseEntity> _lstCourseSelected = [];
+
+  checkCameraPermssion() async {
+    if (await Permission.camera.request().isRestricted ||
+        await Permission.camera.request().isDenied) {
+      await Permission.camera.request();
+    }
+  }
+
+  File? _img;
+  Future _browseImage(ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+          //send image to server
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +93,8 @@ class _RegisterViewState extends State<RegisterView> {
                             children: [
                               ElevatedButton.icon(
                                 onPressed: () {
+                                  checkCameraPermssion();
+                                  _browseImage(ImageSource.camera);
                                   Navigator.pop(context);
                                   // Upload image it is not null
                                 },
@@ -72,7 +102,9 @@ class _RegisterViewState extends State<RegisterView> {
                                 label: const Text('Camera'),
                               ),
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _browseImage(ImageSource.gallery);
+                                },
                                 icon: const Icon(Icons.image),
                                 label: const Text('Gallery'),
                               ),
@@ -86,13 +118,13 @@ class _RegisterViewState extends State<RegisterView> {
                       width: 200,
                       child: CircleAvatar(
                         radius: 50,
-                        // backgroundImage: _img != null
-                        //     ? FileImage(_img!)
-                        //     : const AssetImage('assets/images/profile.png')
-                        //         as ImageProvider,
-                        backgroundImage:
-                            const AssetImage('assets/images/profile.png')
+                        backgroundImage: _img != null
+                            ? FileImage(_img!)
+                            : const AssetImage('assets/images/profile.png')
                                 as ImageProvider,
+                        // backgroundImage:
+                        //     const AssetImage('assets/images/profile.png')
+                        //         as ImageProvider,
                       ),
                     ),
                   ),
