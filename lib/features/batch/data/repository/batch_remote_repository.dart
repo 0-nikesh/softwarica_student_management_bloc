@@ -25,10 +25,10 @@ class BatchRemoteRepository implements IBatchRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteBatch(String id) async {
+  Future<Either<Failure, void>> deleteBatch(String id, String? token) async {
     try {
-      await batchRemoteDataSource.deleteBatch(id);
-      return Right(unit);
+      await batchRemoteDataSource.deleteBatch(id, token);
+      return Right(null);
     } catch (e) {
       return Left(
         ApiFailure(message: e.toString()),
