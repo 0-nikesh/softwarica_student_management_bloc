@@ -54,5 +54,20 @@ void main() {
         verify(() => getAllBatchUseCase.call()).called(1);
       });
 
-  
+  blocTest<BatchBloc, BatchState>(
+      'emits [BatchState] with loaded batches when LoadBbatches is added with skip 1',
+      build: () {
+        when(() => getAllBatchUseCase.call())
+            .thenAnswer((_) async => Right(lstBatches));
+        return batchBloc;
+      },
+      act: (bloc) => bloc.add(LoadBatches()),
+      skip: 1,
+      expect: () => [
+            BatchState.initial()
+                .copyWith(isLoading: false, batches: lstBatches),
+          ],
+      verify: (_) {
+        verify(() => getAllBatchUseCase.call()).called(1);
+      });
 }
