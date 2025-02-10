@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:softwarica_student_management_bloc/core/error/failure.dart';
 import 'package:softwarica_student_management_bloc/features/batch/domain/entity/batch_entity.dart';
 import 'package:softwarica_student_management_bloc/features/batch/domain/use_case/create_batch_usecase.dart';
 import 'package:softwarica_student_management_bloc/features/batch/domain/use_case/delete_batch_usecase.dart';
@@ -66,6 +67,22 @@ void main() {
       expect: () => [
             BatchState.initial()
                 .copyWith(isLoading: false, batches: lstBatches),
+          ],
+      verify: (_) {
+        verify(() => getAllBatchUseCase.call()).called(1);
+      });
+
+  blocTest<BatchBloc, BatchState>(
+      'emits [BatchState] with error when LoadBatches fails',
+      build: () {
+        when(() => getAllBatchUseCase.call())
+            .thenAnswer((_) async => Left(ApiFailure(message: 'Error')));
+        return batchBloc;
+      },
+      act: (bloc) => bloc.add(LoadBatches()),
+      expect: () => [
+            BatchState.initial().copyWith(isLoading: true),
+            BatchState.initial().copyWith(isLoading: false, error: 'Error'),
           ],
       verify: (_) {
         verify(() => getAllBatchUseCase.call()).called(1);
